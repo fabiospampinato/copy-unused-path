@@ -39,10 +39,9 @@
     "unused",
     "path"
   ],
-  "engines": {
-    "node": "^10.15.0"
-  },
   "dependencies": {
+    "@types/fs-extra": "^8.0.0",
+    "fs-extra": "^8.1.0",
     "get-unused-path": "^1.0.0",
     "tryloop": "^1.1.0"
   },

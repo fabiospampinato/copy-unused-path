@@ -1,14 +1,14 @@
 
 /* IMPORT */
 
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import getUnusedPath from 'get-unused-path';
 import {Options, Result} from 'get-unused-path/dist/types';
 import tryloop from 'tryloop';
 
 /* COPY UNUSED PATH */
 
-function copyUnusedPath ( filePath: string | Buffer, options: Options ): Promise<Result> {
+function copyUnusedPath ( filePath: string, options: Options ): Promise<Result> {
 
   return new Promise ( ( resolve, reject ) => {
 
@@ -16,7 +16,7 @@ function copyUnusedPath ( filePath: string | Buffer, options: Options ): Promise
 
       function copy () {
         return new Promise ( resolve => {
-          fs.copyFile ( filePath, result.filePath, err => {
+          fs.copy ( filePath, result.filePath, err => {
             if ( err ) return resolve ();
             resolve ( true );
           });
