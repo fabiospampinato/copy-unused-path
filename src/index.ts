@@ -30,7 +30,7 @@ function copyUnusedPath ( filePath: string, options: Options ): Promise<Result> 
       }
 
       const loop = tryloop.exponential ({
-        timeout: 1500,
+        timeout: 3000,
         tries: 20,
         factor: 2,
         minInterval: 1,
