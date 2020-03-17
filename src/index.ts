@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import * as fs from 'fs-extra';
 import getUnusedPath from 'get-unused-path';
 import {Result} from 'get-unused-path/dist/types';
 import tryloop from 'tryloop';
 import {ExponentialOptions} from 'tryloop/dist/types';
+import {fromCallback as universalify} from 'universalify';
 import {Options} from './types';
 
 /* COPY UNUSED PATH */
@@ -18,7 +18,8 @@ function copyUnusedPath ( filePath: string, options: Options, tryloopOptions?: P
 
       function copy () {
         return new Promise ( resolve => {
-          fs.copy ( filePath, result.filePath, err => {
+          const copy = universalify ( require ( 'fs-extra/lib/copy/copy' ) );
+          copy ( filePath, result.filePath, err => {
             if ( err ) return resolve ();
             resolve ( true );
           });
