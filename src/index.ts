@@ -1,55 +1,33 @@
 
 /* IMPORT */
 
-import * as fs from 'fs';
-import * as path from 'path';
 import getUnusedPath from 'get-unused-path';
-import {Result} from 'get-unused-path/dist/types';
-import tryloop from 'tryloop';
-import {ExponentialOptions} from 'tryloop/dist/types';
-import {Options} from './types';
+import fs from 'node:fs';
+import type {Options, Result} from './types';
 
-/* COPY UNUSED PATH */
+/* MAIN */
 
-function copyUnusedPath ( filePath: string, options: Options, tryloopOptions?: Partial<Omit<ExponentialOptions, 'fn'>> ): Promise<Result> {
+const copyUnusedPath = async ( filePath: string, options: Options ): Promise<Result> => {
 
-  return new Promise ( ( resolve, reject ) => {
+  const result = await getUnusedPath ( options );
 
-    getUnusedPath ( options ).then ( result => {
+  try {
 
-      function copy () {
-        const parentPath = path.dirname ( result.filePath );
-        return fs.promises.mkdir ( parentPath, { recursive: true } ).then ( () => {
-          return fs.promises.copyFile ( filePath, result.filePath ).then ( () => true, () => {} );
-        }).catch ( () => {} );
-      }
+    await fs.promises.cp ( filePath, result.filePath, { recursive: true } );
 
-      function end ( success?: boolean ) {
-        if ( options.autoDispose !== false ) result.dispose ();
-        if ( success === true ) return resolve ( result );
-        reject ( new Error ( 'Couldn\'t copy to unused path' ) );
-      }
+    return result;
 
-      const exponentialOptions = Object.assign ({
-        timeout: 3000,
-        tries: 20,
-        factor: 2,
-        minInterval: 1,
-        maxInterval: 1000,
-        fn: copy
-      }, tryloopOptions );
+  } finally {
 
-      const loop = tryloop.exponential ( exponentialOptions );
+    if ( options.autoDispose !== false ) {
 
-      loop.start ().then ( end ).catch ( end );
+      result.dispose ();
 
-    }).catch ( reject );
+    }
 
-  });
+  }
 
-}
-
-copyUnusedPath.blacklist = getUnusedPath.blacklist;
+};
 
 /* EXPORT */
 
