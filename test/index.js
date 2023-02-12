@@ -4,6 +4,7 @@
 import {describe} from 'fava';
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import copyUnusedPath from '../dist/index.js';
 
 /* MAIN */
