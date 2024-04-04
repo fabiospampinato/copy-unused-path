@@ -32,3 +32,4 @@ const copyUnusedPath = async ( filePath: string, options: Options ): Promise<Res
 /* EXPORT */
 
 export default copyUnusedPath;
+export type {Options, Result};
